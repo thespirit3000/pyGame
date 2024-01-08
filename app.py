@@ -36,9 +36,17 @@ class Game():
                    self.actions['action2'] = True
                if event.key == pygame.K_RETURN:
                    self.actions['start'] = True
-            
-        
+    def update(self):
+        pass
 
+    def render(self):
+        self.screen.blit(pygame.transform.scale(self.game_canvas,(self.SCREEN_W,self.SCREEN_H)),(0,0))
+        pygame.display.flip()
+            
+    def get_dt(self):
+        now = time.time()
+        self.dt = now - self.prev_time
+        self.prev_time = now 
 
 
 
