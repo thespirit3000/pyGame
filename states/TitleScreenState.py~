@@ -1,0 +1,73 @@
+import pygame, time
+from states.GameState import GameState
+
+	
+TRANSITION_NONE = 0
+TRANSITION_IN = 1
+TRANSITION_OUT = 2
+
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+SELECTION_COLOR = (255, 0,0)
+
+class TitleScreenState(GameState):
+    def __init__(self, game):
+        super().__init__(game)
+        self.menu_options = ["Start game", "Options", "Exit"]
+        self.current_option = 0
+        self.game = game
+        self.transition_start_time = 0
+        self.transition_alpha = 0
+        self.transition_duration = 0.5
+        self.game_title = "My Awesome game"
+        self.animation_title()
+
+    def handle_events(self, event):
+        super().handle_events(event)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w:
+                self.current_option = (self.current_option - 1) % len(self.menu_options)
+                print(self.current_option)
+            elif event.key == pygame.K_s:
+                self.current_option = (self.current_option + 1) % len(self.menu_options)
+                print(self.current_option)
+            elif event.key == pygame.K_RETURN:
+                if self.current_option == 0:
+                        # Start Game
+                    pass
+                if self.current_option == 1:
+                        # Options
+                    pass
+                if self.current_option == 2:
+                    self.game.playing = False
+                    self.game.running = False
+
+    def update(self):
+        pass
+              
+    def render(self):
+        screen = self.game.screen
+        font = self.game.font
+        screen.fill((0, 0, 0))  # Fill the screen with black
+        for i, option in enumerate(self.menu_options):
+            text = font.render(option, True, WHITE if i != self.current_option else SELECTION_COLOR)
+            text_rect = text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 + i * 50))
+            screen.blit(text, text_rect)
+        title_text = font.render(self.game_title, True, (WHITE))
+        title_rect = title_text.get_rect(center = (screen.get_width()/2, 50)) 
+        screen.blit(title_text, title_rect)
+
+    def animation_title(self):
+        screen = self.game.screen
+        font = self.game.font
+        for alpha in range(0, 255, 5):
+            screen.fill((0,0,0))
+            title_text = font.render(self.game_title, True, (WHITE))
+            title_text.set_alpha(alpha)
+            title_rect = title_text.get_rect(center = (screen.get_width()/2, 50)) 
+            screen.blit(title_text, title_rect)
+            pygame.display.flip()
+            time.sleep(0.05)
+
+
+                
